@@ -293,7 +293,7 @@ static int32_t ov9726_set_fps(struct fps_cfg	*fps)
 
 static int32_t ov9726_write_exp_gain(uint16_t gain, uint32_t line)
 {
-	static uint16_t max_legal_gain = 0x00FF;
+	static uint16_t max_legal_gain	=	0x00E0;
 	uint8_t gain_msb, gain_lsb;
 	uint8_t intg_time_msb, intg_time_lsb;
 	uint8_t ov9726_offset = 6;
@@ -748,8 +748,6 @@ static int ov9726_sensor_probe(const struct msm_camera_sensor_info *info,
 	s->s_init = ov9726_sensor_open_init;
 	s->s_release = ov9726_sensor_release;
 	s->s_config  = ov9726_sensor_config;
-	s->s_camera_type = FRONT_CAMERA_2D;
-	s->s_mount_angle = info->sensor_platform_info->mount_angle;
 	ov9726_probe_init_done(info);
 
 	return rc;
