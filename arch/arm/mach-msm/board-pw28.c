@@ -411,26 +411,6 @@ static int msm_hsusb_ldo_init(int init)
 	return 0;
 }
 
-static int msm_hsusb_ldo_enable(int enable)
-{
-	static int ldo_status;
-
-	if (!vreg_3p3 || IS_ERR(vreg_3p3))
-		return -ENODEV;
-
-	if (ldo_status == enable)
-		return 0;
-
-	ldo_status = enable;
-
-	pr_info("%s: %d", __func__, enable);
-
-	if (enable)
-		return vreg_enable(vreg_3p3);
-
-	return vreg_disable(vreg_3p3);
-}
-
 static int msm_hsusb_pmic_notif_init(void (*callback)(int online), int init)
 {
 	int ret;
@@ -443,12 +423,12 @@ static int msm_hsusb_pmic_notif_init(void (*callback)(int online), int init)
 	}
 	return ret;
 }
-#if 0
+
 static int msm_otg_rpc_phy_reset(void __iomem *regs)
 {
 	return msm_hsusb_phy_reset();
 }
-#endif
+
 static struct msm_otg_platform_data msm_otg_pdata = {
 	.rpc_connect	= hsusb_rpc_connect,
 	.pmic_vbus_notif_init    = msm_hsusb_pmic_notif_init,
@@ -459,7 +439,6 @@ static struct msm_otg_platform_data msm_otg_pdata = {
 	.vbus_power = msm_hsusb_vbus_power,
 #endif
 	.ldo_init		= msm_hsusb_ldo_init,
-        .ldo_enable             = msm_hsusb_ldo_enable,
 	.pclk_required_during_lpm = 1,
 	.pclk_src_name		= "ebi1_usb_clk",
 };
@@ -2121,8 +2100,7 @@ static void __init msm7x2x_init(void)
 			PRE_EMPHASIS_WITH_20_PERCENT;
 		msm_otg_pdata.drv_ampl = HS_DRV_AMPLITUDE_5_PERCENT;
 		msm_otg_pdata.cdr_autoreset = CDR_AUTO_RESET_ENABLE;
-//		msm_otg_pdata.phy_reset = msm_otg_rpc_phy_reset;
-		msm_otg_pdata.phy_reset_sig_inverted = 1;
+		msm_otg_pdata.phy_reset = msm_otg_rpc_phy_reset;
 	}
 	if (machine_is_msm7x27_surf() || machine_is_msm7x27_ffa()) {
 		msm_otg_pdata.pemp_level =
