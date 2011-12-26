@@ -1416,15 +1416,10 @@ static long kgsl_ioctl_map_user_mem(struct kgsl_device_private *dev_priv,
 	uint64_t total_offset;
 
 	if (IOCTL_KGSL_SHAREDMEM_FROM_PMEM == cmd) {
-		if (copy_from_user(&param, data,
-			sizeof(struct kgsl_sharedmem_from_pmem))) {
-			result = -EFAULT;
-			goto error;
-		}
+		memcpy(&param, data, sizeof(struct kgsl_sharedmem_from_pmem));
 		param.memtype = KGSL_USER_MEM_TYPE_PMEM;
-	} else if (copy_from_user(&param, data, sizeof(param))) {
-		result = -EFAULT;
-		goto error;
+	} else {
+		memcpy(&param, data, sizeof(param)); 
 	}
 
 	kgsl_memqueue_drain_unlocked(dev_priv->device);
@@ -1586,14 +1581,9 @@ static long kgsl_ioctl_map_user_mem(struct kgsl_device_private *dev_priv,
 	param.gpuaddr = entry->memdesc.gpuaddr;
 
 	if (IOCTL_KGSL_SHAREDMEM_FROM_PMEM == cmd) {
-		if (copy_to_user(data, &param,
-			sizeof(struct kgsl_sharedmem_from_pmem))) {
-			result = -EFAULT;
-			goto error_unmap_entry;
-		}
-	} else if (copy_to_user(data, &param, sizeof(param))) {
-		result = -EFAULT;
-		goto error_unmap_entry;
+		memcpy(data, &param, sizeof(struct kgsl_sharedmem_from_pmem));
+	} else {
+		memcpy(data, &param, sizeof(param));
 	}
 
 	/* Statistics */
