@@ -410,18 +410,10 @@ static int msm_batt_power_get_property(struct power_supply *psy,
 		val->intval = msm_batt_info.batt_technology;
 		break;
 	case POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN:
-#ifdef CONFIG_BOARD_PW28
 		val->intval = msm_batt_info.voltage_max_design;
-#else
-		val->intval = msm_batt_info.voltage_max_design * 1000;
-#endif
 		break;
 	case POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN:
-#ifdef CONFIG_BOARD_PW28
 		val->intval = msm_batt_info.voltage_min_design;
-#else
-		val->intval = msm_batt_info.voltage_min_design * 1000;
-#endif
 		break;
 	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
 #ifdef CONFIG_BOARD_PW28
