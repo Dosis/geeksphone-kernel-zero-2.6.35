@@ -1760,6 +1760,8 @@ static uint32_t msm_sdcc_setup_power(struct device *dv, unsigned int vdd)
 	return 0;
 }
 
+#define PW28_SDIO_WAKEUP
+
 #ifdef CONFIG_MMC_MSM_SDC1_SUPPORT
 static struct mmc_platform_data msm7x2x_sdc1_data = {
 	.ocr_mask	= MMC_VDD_28_29,
@@ -1781,7 +1783,10 @@ static struct mmc_platform_data msm7x2x_sdc2_data = {
 	.translate_vdd	= msm_sdcc_setup_power,
 	.mmc_bus_width  = MMC_CAP_4_BIT_DATA,
 #ifdef CONFIG_MMC_MSM_SDIO_SUPPORT
-//	.sdiowakeup_irq = MSM_GPIO_TO_INT(66),
+#ifndef PW28_SDIO_WAKEUP
+	.sdiowakeup_irq = MSM_GPIO_TO_INT(66),
+#else
+#endif
 #endif
 	.msmsdcc_fmin	= 144000,
 	.msmsdcc_fmid	= 24576000,
@@ -1824,6 +1829,7 @@ static struct mmc_platform_data msm7x2x_sdc4_data = {
 #endif
 
 #ifdef CONFIG_MMC_MSM_SDC2_SUPPORT
+#ifdef PW28_SDIO_WAKEUP
 static void sdio_wakeup_gpiocfg_slot2(void)
 {
        gpio_request(66, "sdio_wakeup");
@@ -1836,6 +1842,7 @@ static void sdio_wakeup_gpiocfg_slot2(void)
         */
        gpio_free(66);
 }
+#endif
 #endif
 
 static void __init msm7x2x_init_mmc(void)
@@ -1857,8 +1864,11 @@ static void __init msm7x2x_init_mmc(void)
 	if (machine_is_msm7x25_surf() || machine_is_msm7x27_surf() ||
 		machine_is_msm7x27_ffa()) {
 #ifdef CONFIG_MMC_MSM_SDC2_SUPPORT
-//		msm_sdcc_setup_gpio(2, 1);
+#ifndef PW28_SDIO_WAKEUP
+		msm_sdcc_setup_gpio(2, 1);
+#else
 		sdio_wakeup_gpiocfg_slot2();
+#endif
 		msm_add_sdcc(2, &msm7x2x_sdc2_data);
 #endif
 	}
@@ -2223,17 +2233,12 @@ static void __init msm_msm7x2x_allocate_memory_regions(void)
 	}
 
 	size = pmem_audio_size;
-	if (size > 0xE1000) { // 900 KB
+	if (size) {
 		addr = alloc_bootmem(size);
 		android_pmem_audio_pdata.start = __pa(addr);
 		android_pmem_audio_pdata.size = size;
-		pr_info("allocating %lu bytes at %p (%lx physical) for audio "
-			"pmem arena\n", size, addr, __pa(addr));
-	} else if (size) {
-		android_pmem_audio_pdata.start = MSM_PMEM_AUDIO_START_ADDR;
-		android_pmem_audio_pdata.size = size;
 		pr_info("allocating %lu bytes (at %lx physical) for audio "
-			"pmem arena\n", size , MSM_PMEM_AUDIO_START_ADDR);
+			"pmem arena\n", size , __pa(addr));
 	}
 
 	size = fb_size ? : MSM_FB_SIZE;
