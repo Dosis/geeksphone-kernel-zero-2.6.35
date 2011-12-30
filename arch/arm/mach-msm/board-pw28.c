@@ -2198,6 +2198,7 @@ static void __init msm_msm7x2x_allocate_memory_regions(void)
 			"pmem arena\n", size, addr, __pa(addr));
 	}
 
+#if 0
 	size = pmem_audio_size;
 	if (size) {
 		addr = alloc_bootmem(size);
@@ -2206,6 +2207,13 @@ static void __init msm_msm7x2x_allocate_memory_regions(void)
 		pr_info("allocating %lu bytes (at %lx physical) for audio "
 			"pmem arena\n", size , __pa(addr));
 	}
+#else
+	size = MSM_PMEM_AUDIO_SIZE ;
+	android_pmem_audio_pdata.start = MSM_PMEM_AUDIO_START_ADDR ;
+	android_pmem_audio_pdata.size = size;
+	pr_info("allocating %lu bytes (at %lx physical) for audio "
+		"pmem arena\n", size , MSM_PMEM_AUDIO_START_ADDR);
+#endif
 
 	size = fb_size ? : MSM_FB_SIZE;
 	addr = alloc_bootmem(size);
