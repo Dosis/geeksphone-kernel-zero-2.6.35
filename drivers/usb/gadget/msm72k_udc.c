@@ -1537,7 +1537,7 @@ static void usb_do_work(struct work_struct *w)
 					"msm72k_udc: ONLINE -> OFFLINE\n");
 
 #ifdef CONFIG_BOARD_PW28
-				update_usb_to_gui(0);
+				update_usb_to_gui(0);	// CHARGER_TYPE_NONE
 #endif
 
 				atomic_set(&ui->running, 0);

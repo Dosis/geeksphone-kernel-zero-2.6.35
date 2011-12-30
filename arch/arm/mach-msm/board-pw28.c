@@ -25,7 +25,6 @@
 #include <linux/bootmem.h>
 #include <linux/power_supply.h>
 
-
 #include <mach/hardware.h>
 #include <asm/mach-types.h>
 #include <asm/mach/arch.h>
@@ -111,7 +110,7 @@ static struct platform_device mass_storage_device = {
 	.name           = "usb_mass_storage",
 	.id             = -1,
 	.dev            = {
-		.platform_data          = &usb_mass_storage_pdata,
+	.platform_data  = &usb_mass_storage_pdata,
 	},
 };
 #endif
@@ -215,7 +214,7 @@ static struct platform_device usb_mass_storage_device = {
 	.name	= "usb_mass_storage",
 	.id	= -1,
 	.dev	= {
-		.platform_data = &mass_storage_pdata,
+	.platform_data = &mass_storage_pdata,
 	},
 };
 
@@ -229,7 +228,7 @@ static struct platform_device rndis_device = {
 	.name	= "rndis",
 	.id	= -1,
 	.dev	= {
-		.platform_data = &rndis_pdata,
+	.platform_data = &rndis_pdata,
 	},
 };
 
@@ -250,7 +249,7 @@ static struct platform_device android_usb_device = {
 	.name	= "android_usb",
 	.id		= -1,
 	.dev		= {
-		.platform_data = &android_usb_pdata,
+	.platform_data = &android_usb_pdata,
 	},
 };
 
@@ -424,11 +423,6 @@ static int msm_hsusb_pmic_notif_init(void (*callback)(int online), int init)
 	return ret;
 }
 
-static int msm_otg_rpc_phy_reset(void __iomem *regs)
-{
-	return msm_hsusb_phy_reset();
-}
-
 static struct msm_otg_platform_data msm_otg_pdata = {
 	.rpc_connect	= hsusb_rpc_connect,
 	.pmic_vbus_notif_init    = msm_hsusb_pmic_notif_init,
@@ -482,7 +476,7 @@ static struct platform_device msm_device_snd = {
 	.name = "msm_snd",
 	.id = -1,
 	.dev    = {
-		.platform_data = &msm_device_snd_endpoints
+	.platform_data = &msm_device_snd_endpoints
 	},
 };
 
@@ -588,7 +582,7 @@ static struct platform_device msm_device_adspdec = {
 	.name = "msm_adspdec",
 	.id = -1,
 	.dev    = {
-		.platform_data = &msm_device_adspdec_database
+	.platform_data = &msm_device_adspdec_database
 	},
 };
 
@@ -654,7 +648,7 @@ static struct platform_device hs_device = {
 	.name   = "msm-handset",
 	.id     = -1,
 	.dev    = {
-		.platform_data = &hs_platform_data,
+	.platform_data = &hs_platform_data,
 	},
 };
 
@@ -849,7 +843,7 @@ static struct platform_device lcdc_ili9325sim_panel_device = {
 	.name   = "ili9325sim_qvga",
 	.id     = 0,
 	.dev    = {
-		.platform_data = &lcdc_ili9325sim_panel_data,
+	.platform_data = &lcdc_ili9325sim_panel_data,
 	}
 };
 
@@ -884,7 +878,7 @@ static struct platform_device msm_fb_device = {
 	.num_resources  = ARRAY_SIZE(msm_fb_resources),
 	.resource       = msm_fb_resources,
 	.dev    = {
-		.platform_data = &msm_fb_pdata,
+	.platform_data = &msm_fb_pdata,
 	}
 };
 
@@ -1210,8 +1204,8 @@ static struct cm3623_platform_data cm3623_platform_data = {
 static struct i2c_board_info i2c_devices[] = {
 #ifdef CONFIG_MT9D112
 	{
-	 I2C_BOARD_INFO("mt9d112", 0x78 >> 1),
-	 },
+		I2C_BOARD_INFO("mt9d112", 0x78 >> 1),
+	},
 #endif
 #if defined(CONFIG_SENSORS_MMC31XX)
 #include <linux/mmc31xx.h>
@@ -1886,15 +1880,6 @@ static void __init msm7x2x_init_mmc(void)
 #define msm7x2x_init_mmc() do {} while (0)
 #endif
 
-
-static struct msm_pm_platform_data msm7x25_pm_data[MSM_PM_SLEEP_MODE_NR] = {
-	[MSM_PM_SLEEP_MODE_POWER_COLLAPSE].latency = 16000,
-
-	[MSM_PM_SLEEP_MODE_POWER_COLLAPSE_NO_XO_SHUTDOWN].latency = 12000,
-
-	[MSM_PM_SLEEP_MODE_RAMP_DOWN_AND_WAIT_FOR_INTERRUPT].latency = 2000,
-};
-
 static struct msm_pm_platform_data msm7x27_pm_data[MSM_PM_SLEEP_MODE_NR] = {
 	[MSM_PM_SLEEP_MODE_POWER_COLLAPSE].supported = 1,
 	[MSM_PM_SLEEP_MODE_POWER_COLLAPSE].suspend_enabled = 1,
@@ -1962,13 +1947,8 @@ static void __init msm_device_i2c_init(void)
 	if (gpio_request(96, "i2c_sec_dat"))
 		pr_err("failed to request gpio i2c_sec_dat\n");
 
-	if (cpu_is_msm7x27())
-		msm_i2c_pdata.pm_lat =
+	msm_i2c_pdata.pm_lat =
 		msm7x27_pm_data[MSM_PM_SLEEP_MODE_POWER_COLLAPSE_NO_XO_SHUTDOWN]
-		.latency;
-	else
-		msm_i2c_pdata.pm_lat =
-		msm7x25_pm_data[MSM_PM_SLEEP_MODE_POWER_COLLAPSE_NO_XO_SHUTDOWN]
 		.latency;
 
 	msm_device_i2c.dev.platform_data = &msm_i2c_pdata;
@@ -2105,20 +2085,10 @@ static void __init msm7x2x_init(void)
 
 #ifdef CONFIG_USB_MSM_OTG_72K
 	msm_device_otg.dev.platform_data = &msm_otg_pdata;
-	if (machine_is_msm7x25_surf() || machine_is_msm7x25_ffa()) {
-		msm_otg_pdata.pemp_level =
-			PRE_EMPHASIS_WITH_20_PERCENT;
-		msm_otg_pdata.drv_ampl = HS_DRV_AMPLITUDE_5_PERCENT;
-		msm_otg_pdata.cdr_autoreset = CDR_AUTO_RESET_ENABLE;
-		msm_otg_pdata.phy_reset = msm_otg_rpc_phy_reset;
-	}
-	if (machine_is_msm7x27_surf() || machine_is_msm7x27_ffa()) {
-		msm_otg_pdata.pemp_level =
-			PRE_EMPHASIS_WITH_10_PERCENT;
-		msm_otg_pdata.drv_ampl = HS_DRV_AMPLITUDE_5_PERCENT;
-		msm_otg_pdata.cdr_autoreset = CDR_AUTO_RESET_DISABLE;
-		msm_otg_pdata.phy_reset_sig_inverted = 1;
-	}
+	msm_otg_pdata.pemp_level = PRE_EMPHASIS_WITH_10_PERCENT;
+	msm_otg_pdata.drv_ampl = HS_DRV_AMPLITUDE_5_PERCENT;
+	msm_otg_pdata.cdr_autoreset = CDR_AUTO_RESET_DISABLE;
+	msm_otg_pdata.phy_reset_sig_inverted = 1;
 
 #ifdef CONFIG_USB_GADGET
 	msm_otg_pdata.swfi_latency =
@@ -2161,12 +2131,8 @@ static void __init msm7x2x_init(void)
 
 	bt_power_init();
 
-	if (cpu_is_msm7x27())
-		msm_pm_set_platform_data(msm7x27_pm_data,
-					ARRAY_SIZE(msm7x27_pm_data));
-	else
-		msm_pm_set_platform_data(msm7x25_pm_data,
-					ARRAY_SIZE(msm7x25_pm_data));
+	msm_pm_set_platform_data(msm7x27_pm_data,
+		ARRAY_SIZE(msm7x27_pm_data));
 }
 
 static unsigned pmem_kernel_ebi1_size = PMEM_KERNEL_EBI1_SIZE;
