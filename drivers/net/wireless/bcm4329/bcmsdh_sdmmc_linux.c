@@ -70,6 +70,7 @@ void sdio_function_cleanup(void);
 #define AUTHOR "Broadcom Corporation"
 
 #ifdef CUSTOMER_HW4
+int sdio_reset_comm(struct mmc_card *card);
 void dhd_reset_chip(void);
 #endif
 

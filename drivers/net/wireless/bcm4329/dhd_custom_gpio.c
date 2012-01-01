@@ -155,14 +155,11 @@ dhd_customer_gpio_wlan_ctrl(int onoff)
 #ifdef CUSTOMER_HW2
 			wifi_set_power(1, 0);
 #endif
-#ifdef CUSTOMER_HW4
-                        dhd_reset_chip();
-#endif
 #ifdef CONFIG_BOARD_PW28
 			wlan_power(1);
-			gpio_direction_output(97,0);
-			msleep(100);
-			gpio_direction_output(97,1);
+#endif
+#ifdef CUSTOMER_HW4
+                        dhd_reset_chip();
 #endif
 			WL_ERROR(("=========== WLAN going back to live  ========\n"));
 		break;
@@ -174,7 +171,7 @@ dhd_customer_gpio_wlan_ctrl(int onoff)
 			bcm_wlan_power_off(1);
 #endif /* CUSTOMER_HW */
 #ifdef CONFIG_BOARD_PW28
-			gpio_direction_output(97,0);
+			gpio_set_value(CUSTOM_RESET_GPIO_NUM, 0);
 #endif
 		break;
 
@@ -185,7 +182,7 @@ dhd_customer_gpio_wlan_ctrl(int onoff)
 			bcm_wlan_power_on(1);
 #endif /* CUSTOMER_HW */
 #ifdef CONFIG_BOARD_PW28
-			gpio_direction_output(97,1);
+			gpio_set_value(CUSTOM_RESET_GPIO_NUM, 1);
 #endif
 			/* Lets customer power to get stable */
 			OSL_DELAY(50);
