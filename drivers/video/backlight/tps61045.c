@@ -83,8 +83,7 @@ static void Tps61045Set(TpsPumpRes_t * pstRes)
 static void Tps61045PowerOn(TpsPumpRes_t * pstRes)
 {
 	gpio_set_value(pstRes->Id, 1);
-//	pstRes->CurLv = pstRes->DesLv = TPS_HW_MAX_LV;
-	pstRes->CurLv = pstRes->DesLv = TpsRes.MaxLv;
+	pstRes->CurLv = pstRes->DesLv = TPS_HW_MAX_LV;
 }
 
 static void Tps61045PowerOff(TpsPumpRes_t * pstRes)
@@ -160,8 +159,7 @@ static int __init Tps61045Probe(struct platform_device *pdev)
 		}
 		printk(KERN_INFO "%s: get max level %d\n", __func__,
 		       TpsRes.MaxLv);
-//		TpsRes.CurLv = TpsRes.DesLv = TPS_HW_MAX_LV;
-		TpsRes.CurLv = TpsRes.DesLv = TpsRes.MaxLv;
+		TpsRes.CurLv = TpsRes.DesLv = TPS_HW_MAX_LV;
 
 		ChargePumpRegIf(&_ChargePumpIf);
 
