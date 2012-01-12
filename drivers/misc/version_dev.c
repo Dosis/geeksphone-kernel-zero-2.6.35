@@ -16,8 +16,13 @@ ssize_t version_misc_read(struct file *filp, char __user * buf, size_t count,
 	    "Linux version " UTS_RELEASE " \n             (" LINUX_COMPILE_BY
 	    "@" LINUX_COMPILE_HOST ") \n             (" LINUX_COMPILER
 	    ") \n             " UTS_VERSION "\n\0";
-	return copy_to_user(buf, version_for_sys, sizeof(version_for_sys));
 
+	pr_info("%s +++\n%s", __func__, version_for_sys);
+
+	if (copy_to_user(buf, version_for_sys, sizeof(version_for_sys)))
+		return -EFAULT;
+
+	return sizeof(version_for_sys);
 }
 
 struct file_operations misc_version_fops = {
