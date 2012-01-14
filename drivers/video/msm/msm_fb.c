@@ -57,6 +57,10 @@
 extern int load_565rle_image(char *filename);
 #endif
 
+#ifdef CONFIG_BOARD_PW28
+extern int battchg_pause;
+#endif
+
 #ifdef CONFIG_FB_MSM_TRIPLE_BUFFER
 #define MSM_FB_NUM	3
 #endif
@@ -1198,6 +1202,9 @@ static int msm_fb_register(struct msm_fb_data_type *mfd)
 	     mfd->index, fbi->var.xres, fbi->var.yres, fbi->fix.smem_len);
 
 #ifdef CONFIG_FB_MSM_LOGO
+#ifdef CONFIG_BOARD_PW28
+	if (battchg_pause == 0)
+#endif
 	if (!load_565rle_image(INIT_IMAGE_FILE)) ;	/* Flip buffer */
 #endif
 	ret = 0;

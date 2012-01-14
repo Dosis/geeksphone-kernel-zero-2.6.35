@@ -66,6 +66,10 @@
 
 #define KEY(hs_key, input_key) ((hs_key << 24) | input_key)
 
+#ifdef BOARD_PW28
+extern volatile int key_for_charger;
+#endif
+
 enum hs_event {
 	HS_EVNT_EXT_PWR = 0,	/* External Power status        */
 	HS_EVNT_HSD,		/* Headset Detection            */
@@ -322,6 +326,10 @@ static void report_hs_key(uint32_t key_code, uint32_t key_parm)
 	switch (key) {
 	case KEY_POWER:
 	case KEY_END:
+#ifdef CONFIG_BOARD_PW28
+		printk(KERN_ERR "%s:  remote handset event %d\n",__func__, key);
+		key_for_charger = KEY_END;//For power off charging
+#endif
 #ifndef CONFIG_BOARD_PW28
 	case KEY_MEDIA:
 #endif
