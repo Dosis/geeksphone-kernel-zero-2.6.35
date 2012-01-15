@@ -66,7 +66,7 @@
 
 #define KEY(hs_key, input_key) ((hs_key << 24) | input_key)
 
-#ifdef BOARD_PW28
+#ifdef CONFIG_BOARD_PW28
 extern volatile int key_for_charger;
 #endif
 
