@@ -1479,6 +1479,17 @@ struct platform_device msm_device_gpio_i2c = {
     }
 };
 
+static struct platform_device *early_devices[] __initdata = {
+#ifdef CONFIG_GPIOLIB
+	&msm_gpio_devices[0],
+	&msm_gpio_devices[1],
+	&msm_gpio_devices[2],
+	&msm_gpio_devices[3],
+	&msm_gpio_devices[4],
+	&msm_gpio_devices[5],
+#endif
+};
+
 static struct platform_device *devices[] __initdata = {
 #ifdef CONFIG_ANDROID_RAM_CONSOLE
 	&ram_console_device,
@@ -1990,7 +2001,7 @@ static void generate_serial_from_uuid(void)
 	/* Ugly hack: Rewrite the command line to include the
          * serial, since userspace wants it */
 	sprintf(boot_command_line,"%s androidboot.serialno=%s",saved_command_line,board_serial);
-	saved_command_line = kzalloc(strlen(boot_command_line)+1, GFP_KERNEL);
+	saved_command_line = alloc_bootmem(strlen (boot_command_line)+1);
 	strcpy(saved_command_line, boot_command_line);
 }
 
@@ -2027,6 +2038,7 @@ static void __init msm7x2x_init(void)
 
 	wlan_power(1);
 	msm_clock_init(msm_clocks_7x27, msm_num_clocks_7x27);
+	platform_add_devices(early_devices, ARRAY_SIZE(early_devices));
 	generate_serial_from_uuid();
 
 	gpio_tlmm_config(GPIO_CFG(97,  0, GPIO_CFG_OUTPUT, GPIO_CFG_NO_PULL, GPIO_CFG_2MA),GPIO_CFG_ENABLE);

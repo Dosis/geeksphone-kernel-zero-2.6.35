@@ -1,4 +1,4 @@
-/* Copyright (c) 2008-2009, Code Aurora Forum. All rights reserved.
+/* Copyright (c) 2010, Code Aurora Forum. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -26,38 +26,26 @@
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
+#ifndef __LINUX_MSM7200A_GPIO_H
+#define __LINUX_MSM7200A_GPIO_H
 
-#ifndef _ARCH_ARM_MACH_MSM_GPIO_H_
-#define _ARCH_ARM_MACH_MSM_GPIO_H_
+struct msm7200a_gpio_regs {
+	void __iomem *in;
+	void __iomem *out;
+	void __iomem *oe;
+	void __iomem *int_status;
+	void __iomem *int_clear;
+	void __iomem *int_en;
+	void __iomem *int_edge;
+	void __iomem *int_pos;
+};
 
-#if defined(CONFIG_BOARD_PW28)
-#ifdef CONFIG_GPIOLIB
-static inline void msm_gpio_enter_sleep(int from_idle) {}
-static inline void msm_gpio_exit_sleep(void) {}
-#else
-void msm_gpio_enter_sleep(int from_idle);
-void msm_gpio_exit_sleep(void);
-
-/* Locate the GPIO_OUT register for the given GPIO and return its address
- * and the bit position of the gpio's bit within the register.
- *
- * This function is used by gpiomux-v1 in order to support output transitions.
- */
-void msm_gpio_find_out(const unsigned gpio, void __iomem **out,
-	unsigned *offset);
-
-#endif
-#else
-void msm_gpio_enter_sleep(int from_idle);
-void msm_gpio_exit_sleep(void);
-
-/* Locate the GPIO_OUT register for the given GPIO and return its address
- * and the bit position of the gpio's bit within the register.
- *
- * This function is used by gpiomux-v1 in order to support output transitions.
- */
-void msm_gpio_find_out(const unsigned gpio, void __iomem **out,
-	unsigned *offset);
-#endif
+struct msm7200a_gpio_platform_data {
+	unsigned gpio_base;
+	unsigned ngpio;
+	unsigned irq_base;
+	unsigned irq_summary;
+	struct msm7200a_gpio_regs regs;
+};
 
 #endif

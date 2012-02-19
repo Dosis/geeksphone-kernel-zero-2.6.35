@@ -204,6 +204,14 @@ ifdef CONFIG_VCM
 obj-$(CONFIG_ARCH_MSM8X60) += board-msm8x60-vcm.o
 endif
 
+ifeq ($(CONFIG_BOARD_PW28),y)
+ifdef CONFIG_GPIOLIB
+obj-$(CONFIG_ARCH_MSM7X27) += msm7200a-gpio.o
+else
+obj-$(CONFIG_ARCH_MSM7X27) += gpio.o generic_gpio.o
+endif
+obj-$(CONFIG_ARCH_MSM7X27) += tlmm-msm7200a.o
+else
 obj-$(CONFIG_ARCH_MSM7X27) += gpiomux-7x27.o gpiomux-v1.o gpiomux.o
 obj-$(CONFIG_ARCH_MSM7X30) += gpiomux-7x30.o gpiomux-v1.o gpiomux.o
 obj-$(CONFIG_ARCH_QSD8X50) += gpiomux-8x50.o gpiomux-v1.o gpiomux.o
@@ -213,6 +221,7 @@ ifdef CONFIG_MSM_V2_TLMM
 obj-y	+= gpio-v2.o
 else
 obj-y	+= gpio.o
+endif
 endif
 obj-$(CONFIG_MSM_SLEEP_STATS) += msm_rq_stats.o idle_stats.o
 obj-$(CONFIG_MSM_SHOW_RESUME_IRQ) += msm_show_resume_irq.o

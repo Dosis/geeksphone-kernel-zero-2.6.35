@@ -37,6 +37,10 @@
 #include "clock-pcom.h"
 #include "clock-voter.h"
 
+#if defined(CONFIG_BOARD_PW28)
+#include "msm7200a-gpio.h"
+#endif
+
 static struct resource resources_uart1[] = {
 	{
 		.start	= INT_UART1,
@@ -844,3 +848,25 @@ struct clk_lookup msm_clocks_7x27[] = {
 };
 
 unsigned msm_num_clocks_7x27 = ARRAY_SIZE(msm_clocks_7x27);
+
+#if defined(CONFIG_BOARD_PW28)
+#ifdef CONFIG_GPIOLIB
+static struct msm7200a_gpio_platform_data gpio_platform_data[] = {
+	MSM7200A_GPIO_PLATFORM_DATA(0,   0,  15, INT_GPIO_GROUP1),
+	MSM7200A_GPIO_PLATFORM_DATA(1,  16,  42, INT_GPIO_GROUP2),
+	MSM7200A_GPIO_PLATFORM_DATA(2,  43,  67, INT_GPIO_GROUP1),
+	MSM7200A_GPIO_PLATFORM_DATA(3,  68,  94, INT_GPIO_GROUP1),
+	MSM7200A_GPIO_PLATFORM_DATA(4,  95, 106, INT_GPIO_GROUP1),
+	MSM7200A_GPIO_PLATFORM_DATA(5, 107, 132, INT_GPIO_GROUP1),
+};
+
+struct platform_device msm_gpio_devices[] = {
+	MSM7200A_GPIO_DEVICE(0, gpio_platform_data),
+	MSM7200A_GPIO_DEVICE(1, gpio_platform_data),
+	MSM7200A_GPIO_DEVICE(2, gpio_platform_data),
+	MSM7200A_GPIO_DEVICE(3, gpio_platform_data),
+	MSM7200A_GPIO_DEVICE(4, gpio_platform_data),
+	MSM7200A_GPIO_DEVICE(5, gpio_platform_data),
+};
+#endif
+#endif
