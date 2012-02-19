@@ -2302,7 +2302,6 @@ msmsdcc_runtime_suspend(struct device *dev)
 		if (rc && wake_lock_active(&host->sdio_suspend_wlock))
 			wake_unlock(&host->sdio_suspend_wlock);
 	}
-	pr_debug("%s: %s: ends with err=%d\n", mmc_hostname(mmc), __func__, rc);
 	return rc;
 }
 
