@@ -215,6 +215,7 @@ static void cm3623_report(struct cm3623_sensor_data *sd, int type)
                  if (rc < 0) 
                      break;
     	    sd->distance = cm3623_calc_distance(rc);
+	    sd->distance = sd->distance < 50 ? 1 : 110;
 		wake_lock_timeout(&prx_wake_lock, 2 * HZ);
     	    //printk("distance %d mm\n", sd->distance);
         }
