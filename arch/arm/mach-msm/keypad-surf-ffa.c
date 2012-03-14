@@ -293,12 +293,12 @@ int hs_key_filter(struct gpio_event_input_devs *input_devs,
 	     void *data, unsigned int dev, unsigned int *type,
 	     unsigned int *code, int *value)
 {
-	pr_info("%s\n", __func__);
-	if (!hs_is_key_enabled()) {
-		*type = EV_MAX;
+	if (hs_is_key_enabled() && (*value == 0)) {
+		input_event(input_devs->dev[dev], *type, *code, 1);
+		input_event(input_devs->dev[dev], *type, *code, 0);
 	}
 
-	return 0;
+	return 1;
 }
 
 static struct gpio_event_input_info headset_key_input_info = {
