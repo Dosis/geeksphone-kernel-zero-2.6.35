@@ -90,12 +90,12 @@
 /* Using upper 1/2MB of Apps Bootloader memory*/
 #define MSM_PMEM_AUDIO_START_ADDR	0x80000ul
 
-#define MANU_NAME		"SIMCOM"
+#define MANU_NAME			"SIMCOM"
 #define MASS_STORAGE_NAME	"SIMCOM"
-#define PRUD_NAME		"PW28"
-#define VID	0x05C6
-#define PID	0x9018
-#define ADBFN	0x1A
+#define PRUD_NAME			"PW28"
+#define VID					0x05C6
+#define PID					0x9018
+#define ADBFN				0x1A
 
 #ifdef CONFIG_USB_FUNCTION
 static struct usb_mass_storage_platform_data usb_mass_storage_pdata = {
@@ -110,7 +110,7 @@ static struct platform_device mass_storage_device = {
 	.name           = "usb_mass_storage",
 	.id             = -1,
 	.dev            = {
-	.platform_data  = &usb_mass_storage_pdata,
+		.platform_data  = &usb_mass_storage_pdata,
 	},
 };
 #endif
@@ -120,51 +120,52 @@ static char *usb_functions_default[] = {
 #ifdef CONFIG_USB_ANDROID_DIAG
 	"diag",
 #endif
-#ifdef CONFIG_USB_F_SERIAL
-       "modem",
-       "nmea",
-#endif
 #ifdef CONFIG_USB_ANDROID_RMNET
-       "rmnet",
+	"rmnet",
 #endif
-       "usb_mass_storage",
+	"usb_mass_storage",
+#ifdef CONFIG_USB_F_SERIAL
+	"modem",
+	"nmea",
+#endif
 };
 
 static char *usb_functions_default_adb[] = {
 #ifdef CONFIG_USB_ANDROID_DIAG
 	"diag",
 #endif
-       "adb",
-#ifdef CONFIG_USB_F_SERIAL
-       "modem",
-       "nmea",
-#endif
+	"usb_mass_storage",
+	"adb",
 #ifdef CONFIG_USB_ANDROID_RMNET
-       "rmnet",
+	"rmnet",
 #endif
-       "usb_mass_storage",
+#ifdef CONFIG_USB_F_SERIAL
+	"modem",
+	"nmea",
+#endif
 };
 
 static char *usb_functions_rndis[] = {
 #ifdef CONFIG_USB_ANDROID_RNDIS
-       "rndis",
+	"rndis",
 #endif
 };
 
 static char *usb_functions_rndis_adb[] = {
 #ifdef CONFIG_USB_ANDROID_RNDIS
-       "rndis",
+	"rndis",
 #endif
-       "adb",
+	"adb",
 };
 
 static char *usb_functions_all[] = {
 #ifdef CONFIG_USB_ANDROID_RNDIS
-        "rndis",
+	"rndis",
 #endif
 #ifdef CONFIG_USB_ANDROID_DIAG
 	"diag",
 #endif
+	"usb_mass_storage",
 	"adb",
 #ifdef CONFIG_USB_F_SERIAL
 	"modem",
@@ -173,7 +174,6 @@ static char *usb_functions_all[] = {
 #ifdef CONFIG_USB_ANDROID_RMNET
 	"rmnet",
 #endif
-	"usb_mass_storage",
 #ifdef CONFIG_USB_ANDROID_ACM
 	"acm",
 #endif
@@ -205,7 +205,7 @@ static struct android_usb_product usb_products[] = {
 static struct usb_mass_storage_platform_data mass_storage_pdata = {
 	.nluns		= 1,
 	.vendor		= "Qualcomm Incorporated",
-	.product        = "Mass storage",
+	.product	= "Mass storage",
 	.release	= 0x0100,
 	.can_stall	= 1,
 };
@@ -214,7 +214,7 @@ static struct platform_device usb_mass_storage_device = {
 	.name	= "usb_mass_storage",
 	.id	= -1,
 	.dev	= {
-	.platform_data = &mass_storage_pdata,
+		.platform_data = &mass_storage_pdata,
 	},
 };
 
@@ -228,7 +228,7 @@ static struct platform_device rndis_device = {
 	.name	= "rndis",
 	.id	= -1,
 	.dev	= {
-	.platform_data = &rndis_pdata,
+		.platform_data = &rndis_pdata,
 	},
 };
 
@@ -249,7 +249,7 @@ static struct platform_device android_usb_device = {
 	.name	= "android_usb",
 	.id		= -1,
 	.dev		= {
-	.platform_data = &android_usb_pdata,
+		.platform_data = &android_usb_pdata,
 	},
 };
 
@@ -275,13 +275,19 @@ static int __init board_serialno_setup(char *serialno)
 
 #ifdef CONFIG_USB_FUNCTION
 static struct usb_function_map usb_functions_map[] = {
+#ifdef CONFIG_USB_ANDROID_DIAG
 	{"diag", 0},
+#endif
 	{"adb", 1},
+#ifdef CONFIG_USB_F_SERIAL
 	{"modem", 2},
 	{"nmea", 3},
+#endif
 	{"mass_storage", 4},
 	{"ethernet", 5},
+#ifdef CONFIG_USB_ANDROID_RMNET
 	{"rmnet", 6},
+#endif
 };
 
 /* dynamic composition */
@@ -476,7 +482,7 @@ static struct platform_device msm_device_snd = {
 	.name = "msm_snd",
 	.id = -1,
 	.dev    = {
-	.platform_data = &msm_device_snd_endpoints
+		.platform_data = &msm_device_snd_endpoints
 	},
 };
 
@@ -582,7 +588,7 @@ static struct platform_device msm_device_adspdec = {
 	.name = "msm_adspdec",
 	.id = -1,
 	.dev    = {
-	.platform_data = &msm_device_adspdec_database
+		.platform_data = &msm_device_adspdec_database
 	},
 };
 
@@ -648,7 +654,7 @@ static struct platform_device hs_device = {
 	.name   = "msm-handset",
 	.id     = -1,
 	.dev    = {
-	.platform_data = &hs_platform_data,
+		.platform_data = &hs_platform_data,
 	},
 };
 
@@ -843,7 +849,7 @@ static struct platform_device lcdc_ili9325sim_panel_device = {
 	.name   = "ili9325sim_qvga",
 	.id     = 0,
 	.dev    = {
-	.platform_data = &lcdc_ili9325sim_panel_data,
+		.platform_data = &lcdc_ili9325sim_panel_data,
 	}
 };
 
@@ -878,7 +884,7 @@ static struct platform_device msm_fb_device = {
 	.num_resources  = ARRAY_SIZE(msm_fb_resources),
 	.resource       = msm_fb_resources,
 	.dev    = {
-	.platform_data = &msm_fb_pdata,
+		.platform_data = &msm_fb_pdata,
 	}
 };
 
@@ -1440,7 +1446,7 @@ static u32 msm_calculate_batt_capacity(u32 current_voltage);
 
 static struct msm_psy_batt_pdata msm_psy_batt_data = {
 	.voltage_min_design 	= 3250,
-	.voltage_max_design	= 4300,	// 4200
+	.voltage_max_design 	= 4300,	// 4200
 	.avail_chg_sources   	= AC_CHG | USB_CHG ,
 	.batt_technology        = POWER_SUPPLY_TECHNOLOGY_LION,
 	.calculate_capacity	= &msm_calculate_batt_capacity,
@@ -1452,9 +1458,9 @@ static u32 msm_calculate_batt_capacity(u32 current_voltage)
 	u32 high_voltage = msm_psy_batt_data.voltage_max_design - 100;
 
 	if (current_voltage <= low_voltage)
-		return 1;
+		return 0;
 	else if (current_voltage >= high_voltage)
-		return 100;
+		return 99;
 	else
 		return (current_voltage - low_voltage) * 100
 			/ (high_voltage - low_voltage);
@@ -1784,7 +1790,7 @@ static struct mmc_platform_data msm7x2x_sdc1_data = {
 
 #ifdef CONFIG_MMC_MSM_SDC2_SUPPORT
 static struct mmc_platform_data msm7x2x_sdc2_data = {
-	.ocr_mask	= MMC_VDD_28_29,
+	.ocr_mask	= MMC_VDD_20_21,
 	.translate_vdd	= msm_sdcc_setup_power,
 	.mmc_bus_width  = MMC_CAP_4_BIT_DATA,
 #ifdef CONFIG_MMC_MSM_SDIO_SUPPORT
@@ -2074,7 +2080,7 @@ static void __init msm7x2x_init(void)
 	/* The appropriate maximum replacement for 160000 is: */
 	/* msm7x2x_clock_data.max_axi_khz */
 	kgsl_3d0_pdata.pwr_data.pwrlevel[0].gpu_freq = 0;
-	kgsl_3d0_pdata.pwr_data.pwrlevel[0].bus_freq = 160000000;
+	kgsl_3d0_pdata.pwr_data.pwrlevel[0].bus_freq = msm7x2x_clock_data.max_axi_khz;
 	kgsl_3d0_pdata.pwr_data.init_level = 0;
 	kgsl_3d0_pdata.pwr_data.num_levels = 1;
 	/* 7x27 doesn't allow graphics clocks to be run asynchronously to */
