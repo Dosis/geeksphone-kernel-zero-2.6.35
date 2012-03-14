@@ -20,7 +20,7 @@
  * this needs to be before <linux/kernel.h> is loaded,
  * and <linux/sched.h> loads <linux/kernel.h>
  */
-#define DEBUG  1
+#define DEBUG  0
 
 #include <linux/slab.h>
 #include <linux/earlysuspend.h>
@@ -52,8 +52,8 @@
 #define BATTERY_RPC_PROG	0x30000089
 #define BATTERY_RPC_VER_1_1	0x00010001
 #define BATTERY_RPC_VER_2_1	0x00020001
-#define BATTERY_RPC_VER_4_1     0x00040001
-#define BATTERY_RPC_VER_5_1     0x00050001
+#define BATTERY_RPC_VER_4_1	0x00040001
+#define BATTERY_RPC_VER_5_1	0x00050001
 
 #define BATTERY_RPC_CB_PROG	(BATTERY_RPC_PROG | 0x01000000)
 
@@ -61,14 +61,14 @@
 #define CHG_RPC_VER_1_1		0x00010001
 #define CHG_RPC_VER_1_3		0x00010003
 #define CHG_RPC_VER_2_2		0x00020002
-#define CHG_RPC_VER_3_1         0x00030001
-#define CHG_RPC_VER_4_1         0x00040001
+#define CHG_RPC_VER_3_1		0x00030001
+#define CHG_RPC_VER_4_1		0x00040001
 
 #define BATTERY_REGISTER_PROC				2
 #define BATTERY_MODIFY_CLIENT_PROC			4
-#define BATTERY_DEREGISTER_CLIENT_PROC			5
+#define BATTERY_DEREGISTER_CLIENT_PROC		5
 #define BATTERY_READ_MV_PROC				12
-#define BATTERY_ENABLE_DISABLE_FILTER_PROC		14
+#define BATTERY_ENABLE_DISABLE_FILTER_PROC	14
 
 #define VBATT_FILTER			2
 
@@ -81,12 +81,11 @@
 #else
 #define BATTERY_LOW		3200
 #endif
-#define BATTERY_HIGH		4300
+#define BATTERY_HIGH	4300
 
 #define FEATRUE_BATTERY_CUST	/*SWH*/
 
 #ifdef FEATRUE_BATTERY_CUST
-
 #define BATTERY_PERCENT_0	0 
 #define BATTERY_PERCENT_1	15
 #define BATTERY_PERCENT_2	30
@@ -94,7 +93,7 @@
 #define BATTERY_PERCENT_4	85
 #define BATTERY_PERCENT_5	99 
 
-#ifdef CONFIG_SIMCUST_BATTERY_PERCENT_FOR_PE28
+#ifdef CONFIG_SIMCUST_BATTERY_PERCENT_FOR_PW28
 #define BATTERY_LEVEL_0      	BATTERY_LOW
 #define BATTERY_LEVEL_1      	3655
 #define BATTERY_LEVEL_2      	3760
@@ -108,25 +107,11 @@
 #define BATTERY_CHG_LEVEL_3    	4040
 #define BATTERY_CHG_LEVEL_4   	4185
 #define BATTERY_CHG_LEVEL_5    	(BATTERY_HIGH - 75) // 4 // 4225
-#else	//default list base on plum battery system
-#define BATTERY_LEVEL_0      	BATTERY_LOW
-#define BATTERY_LEVEL_1      	3660
-#define BATTERY_LEVEL_2      	3808
-#define BATTERY_LEVEL_3      	3890
-#define BATTERY_LEVEL_4     	4030
-#define BATTERY_LEVEL_5     	(BATTERY_HIGH - 140)
-
-#define BATTERY_CHG_LEVEL_0    	BATTERY_LOW + 100
-#define BATTERY_CHG_LEVEL_1    	3880
-#define BATTERY_CHG_LEVEL_2    	3997
-#define BATTERY_CHG_LEVEL_3    	4080
-#define BATTERY_CHG_LEVEL_4   	4216
-#define BATTERY_CHG_LEVEL_5   	(BATTERY_HIGH - 59) // 4 // 4241
 #endif
+
 #define CAPACITY_PERCENTAGE(curV, vL, pL, vH, pH) (pL+((pH-pL)*(curV-vL)*100/(vH-vL))/100)
 
 static u32 msm_batt_capacity_cust(u32 current_voltage);
-
 #endif
 
 #define ONCRPC_CHG_GET_GENERAL_STATUS_PROC	12
@@ -148,7 +133,6 @@ static u32 msm_batt_capacity_cust(u32 current_voltage);
 #endif
 
 #ifdef CONFIG_BOARD_PW28
-
 #define WAKE_UPDATE_BATT_INFO 2
 
 volatile int key_for_charger = 0;
@@ -170,7 +154,6 @@ struct timeval charger_time_val;
 extern int oem_rpc_client_register(int id);
 extern void set_data_to_arm9(int id, char *in, int insize);
 extern void request_suspend_state(suspend_state_t new_state);
-
 #endif
 
 enum {
@@ -270,13 +253,13 @@ enum chg_battery_level_type {
 #ifndef CONFIG_BATTERY_MSM_FAKE
 struct rpc_reply_batt_chg_v1 {
 	struct rpc_reply_hdr hdr;
-	u32 	more_data;
+	u32	more_data;
 
 	u32	charger_status;
 	u32	charger_type;
 	u32	battery_status;
 	u32	battery_level;
-	u32     battery_voltage;
+	u32	battery_voltage;
 	u32	battery_temp;
 };
 
@@ -562,9 +545,9 @@ static void msm_batt_update_psy_status(void)
 	u32	charger_type;
 	u32	battery_status;
 	u32	battery_level;
-	u32     battery_voltage;
+	u32	battery_voltage;
 	u32	battery_temp;
-	struct	power_supply	*supp;
+	struct	power_supply *supp;
 
 	if (msm_batt_get_batt_chg_status())
 		return;
@@ -878,7 +861,6 @@ void update_chg_to_gui(int i)
 	power_supply_changed(supp);
 }
 EXPORT_SYMBOL(update_chg_to_gui);
-
 #endif
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
@@ -1479,7 +1461,7 @@ static u32 msm_batt_capacity_cust(u32 current_voltage)
     {
     }
 
-        if ((CHARGER_TYPE_USB_PC != cur_status) && (CHARGER_TYPE_USB_WALL!= cur_status) &&
+        if ((CHARGER_TYPE_USB_PC != cur_status) && (CHARGER_TYPE_USB_WALL != cur_status) &&
 		(CHARGER_TYPE_USB_CARKIT != cur_status) && (CHARGER_TYPE_WALL != cur_status))
         {  // can only drop
            cur_percentage = (cur_percentage < pre_percentage) ? cur_percentage : pre_percentage;
@@ -1875,7 +1857,6 @@ static int __devinit msm_batt_init_rpc(void)
 }
 
 #ifdef CONFIG_BOARD_PW28
-
 extern int register_charger_usb_init(void);
 extern void unregister_charger_usb(void);
 extern void hsusb_chg_vbus_draw(unsigned mA);
