@@ -60,7 +60,7 @@
 #endif
 #define HS_REL_K		0xFF	/* key release */
 
-#ifndef BOARD_CONFIG_PW28
+#ifndef CONFIG_BOARD_PW28
 #define SW_HEADPHONE_INSERT_W_MIC 1 /* HS with mic */
 #endif
 
